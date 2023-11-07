@@ -3,7 +3,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { HomeScreen, OnBoardingScreen } from "./Screens/";
-
+import "react-native-url-polyfill/auto";
 const Stack = createNativeStackNavigator();
 
 const App = () => {
