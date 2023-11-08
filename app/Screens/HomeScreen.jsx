@@ -11,10 +11,15 @@ import React from "react";
 import { Entypo, Feather, FontAwesome } from "@expo/vector-icons";
 import { Screen3 } from "../assets";
 import { fetchFeeds } from "../sanity";
+import { useDispatch, useSelector } from "react-redux";
+import { SET_FEEDS } from "../context/actions/feedsActions";
+import Feeds from "../Components/Feeds";
 
 const HomeScreen = () => {
   const [searchTerm, setSearchTerm] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(true);
+  const feeds = useSelector((state) => state.feeds);
+  const dispatch = useDispatch();
 
   const handleSearchTerm = (text) => {
     setSearchTerm(text);
@@ -24,11 +29,11 @@ const HomeScreen = () => {
     setIsLoading(true);
     try {
       fetchFeeds().then((res) => {
-        console.log(res);
+        dispatch(SET_FEEDS(res));
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
       });
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 2000);
     } catch (er) {
       console.log(er);
       setIsLoading(false);
@@ -68,7 +73,7 @@ const HomeScreen = () => {
             <ActivityIndicator size={"large"} color={"teal"} />
           </View>
         ) : (
-          <></>
+          <Feeds feeds={feeds} />
         )}
       </ScrollView>
       {/* scrollable container end */}
