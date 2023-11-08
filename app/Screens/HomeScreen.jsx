@@ -73,7 +73,7 @@ const HomeScreen = () => {
             <ActivityIndicator size={"large"} color={"teal"} />
           </View>
         ) : (
-          <Feeds feeds={feeds} />
+          <Feeds feeds={feeds.feeds} />
         )}
       </ScrollView>
       {/* scrollable container end */}
