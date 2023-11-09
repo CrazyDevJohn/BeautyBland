@@ -1,23 +1,27 @@
 export const fetchQuery = `*[_type == 'products'] | order(_createdAt desc){
   _id,
   title,
-    productType,
-    mainImage->{
-      asset -> {
-      uri
-      }
-    }, 
-    bgImage->{
-      asset -> {
-      uri
-      }
-    },
+  productType,
+  mainImage {
+    asset -> {
+      url
+    }
+  },
+  bgImage {
+    asset -> {
+      url
+    }
+  },
   shortDescription,
   description,
   price,
   categories[] -> {
     _id,
     title,
-    mainImage
+    mainImage {
+      asset -> {
+        url
+      }
+    },
   }
 }`;

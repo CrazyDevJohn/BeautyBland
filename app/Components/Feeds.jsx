@@ -1,12 +1,17 @@
 import { View, Text, ActivityIndicator } from "react-native";
 import React from "react";
+import FeedsDetail from "./FeedsDetail";
 
 const Feeds = (props) => {
   const { feeds } = props;
   return (
-    <View className="flex-1 flex-row flex-wrap items-center justify-center">
+    <View className="flex-1 flex-row flex-wrap items-start justify-center">
       {feeds.length > 0 ? (
-        <Text>Feeds</Text>
+        <>
+          {feeds?.map((item, i) => {
+            return <FeedsDetail key={i} data={item} />;
+          })}
+        </>
       ) : (
         <View className="w-full h-64 flex justify-center items-center">
           <ActivityIndicator size={"large"} color={"teal"} />

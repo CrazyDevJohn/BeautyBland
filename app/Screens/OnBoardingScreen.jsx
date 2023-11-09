@@ -1,9 +1,11 @@
 import React from "react";
 import Swiper from "react-native-swiper";
-import { View, Text, Image } from "react-native";
+import { View, Text, Image, StatusBar, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { Brand, Screen1, Screen2, Screen3 } from "../assets";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const { width, height } = Dimensions.get("screen");
 
 const OnBoardingScreen = () => {
   const navigation = useNavigation();
@@ -35,6 +37,7 @@ const OnBoardingScreen = () => {
 
   return (
     <View className="flex-1  bg-white">
+      <StatusBar backgroundColor={"transparent"} barStyle={"light-content"} />
       {screenState === "true" ? (
         <ScreenOne />
       ) : (
