@@ -1,4 +1,4 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApp, getApps } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
   getAuth,
@@ -6,10 +6,12 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
 } from "firebase/auth";
+import { getStorage } from "firebase/storage";
 import { config } from "./firebase.config";
 
-export const app = initializeApp(config);
+export const app = getApps.length > 0 ? getApp() : initializeApp(config);
 export const auth = getAuth(app);
+export const storage = getStorage(app);
 
 const changProfile = async (userName, profileImage) => {
   updateProfile(auth.currentUser, {

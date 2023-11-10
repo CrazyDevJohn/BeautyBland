@@ -31,6 +31,12 @@ const App = () => {
   const [activeScreen, setActiveScreen] = React.useState("");
   LogBox.ignoreLogs([
     "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.",
+    `[2023-11-10T04:43:36.513Z]  @firebase/auth: Auth (10.5.2):
+You are initializing Firebase Auth for React Native without providing
+AsyncStorage. Auth state will default to memory persistence and will not
+persist between sessions. In order to persist auth state, install the package
+"@react-native-async-storage/async-storage" and provide it to
+initializeAuth:`,
   ]);
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
