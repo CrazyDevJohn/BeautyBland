@@ -7,21 +7,36 @@ import {
   ScrollView,
   ActivityIndicator,
   StatusBar,
+  Platform,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React from "react";
-import { Entypo, Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
+import {
+  Entypo,
+  EvilIcons,
+  Feather,
+  FontAwesome,
+  Ionicons,
+} from "@expo/vector-icons";
 import { Screen3 } from "../assets";
 import { fetchFeeds } from "../sanity";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_FEEDS } from "../context/actions/feedsActions";
 import Feeds from "../Components/Feeds";
+import { useNavigation } from "@react-navigation/native";
 
 const HomeScreen = () => {
+  const [isPasswordShowing, setIsPasswordShowing] = React.useState(false);
+  const [isLogInFormOpen, setIsLogInFormOpen] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(true);
   const [filtered, setFiltered] = React.useState(null);
+  const [password, setPassword] = React.useState(null);
+  const [email, setEmail] = React.useState(null);
   const [user, setUser] = React.useState(null);
   const feeds = useSelector((state) => state.feeds);
+  const navigation = useNavigation();
   const dispatch = useDispatch();
 
   const handleSearchTerm = (text) => {
@@ -48,9 +63,21 @@ const HomeScreen = () => {
     }
   }, []);
 
+  const handleSignUpScreen = () => {
+    setEmail("");
+    setIsPasswordShowing(false);
+    setIsLogInFormOpen(false);
+    navigation.navigate("SignUpScreen");
+  };
+
+  const handleLogOutUser = () => {};
+
   return (
     <SafeAreaView className="flex-1 items-center justify-start bg-[#ebeaef]">
-      <StatusBar backgroundColor={"#e8eaef"} barStyle={"dark-content"} />
+      <StatusBar
+        backgroundColor={!isLogInFormOpen ? "#e8eaef" : "#0d192e6f"}
+        barStyle={"dark-content"}
+      />
       <View className="w-full flex-row items-center justify-between px-4 py-2 ">
         {user && user !== null ? (
           <>
@@ -59,12 +86,23 @@ const HomeScreen = () => {
               className="w-12 h-12 rounded-xl"
               resizeMode="cover"
             />
-            <Entypo name="log-out" size={24} color="#555" />
+            <TouchableOpacity onPress={handleLogOutUser}>
+              <Entypo name="log-out" size={24} color="#555" />
+            </TouchableOpacity>
           </>
         ) : (
           <>
-            <View className="w-12 h-12 rounded-xl bg-white" />
-            <Ionicons name="log-in-outline" size={24} color="black" />
+            <TouchableOpacity
+              onPress={() => setIsLogInFormOpen(!isLogInFormOpen)}
+              className="w-12 h-12 rounded-xl bg-white items-center justify-center"
+            >
+              <Feather name="user" size={24} color="#555" />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setIsLogInFormOpen(!isLogInFormOpen)}
+            >
+              <Ionicons name="log-in-outline" size={24} color="#555" />
+            </TouchableOpacity>
           </>
         )}
       </View>
@@ -99,6 +137,76 @@ const HomeScreen = () => {
         </View>
       </ScrollView>
       {/* scrollable container end */}
+
+      {/* Log in form */}
+      {isLogInFormOpen && (
+        <View className="absolute w-full h-full justify-center items-center">
+          <TouchableOpacity
+            className="bg-[#0d192e] w-full h-full absolute opacity-40"
+            onPress={() => setIsLogInFormOpen(false)}
+          ></TouchableOpacity>
+          <View
+            className="w-[90%] h-[400px] bg-[#e8eaef] rounded-2xl px-8"
+            style={{ elevation: Platform.OS === "android" ? 50 : 0 }}
+          >
+            <Text className="text-4xl text-[#0d192e] text-center font-bold pt-12 pb-4">
+              Log In
+            </Text>
+            <View className=" py-5 flex-1 w-full h-full">
+              <View className="px-4 py-2 bg-white rounded-xl  flex-row items-center justify-center space-x-2 mt-3">
+                <TextInput
+                  className="text-base font-semibold text-[#555] flex-1 py-1 -mt-1"
+                  placeholder="Email Address"
+                  placeholderTextColor={"#1f293396"}
+                  onChangeText={setEmail}
+                  value={email}
+                />
+              </View>
+              <View className="px-4 py-2 bg-white rounded-xl  flex-row items-center justify-center space-x-2 mt-3">
+                <TextInput
+                  className="text-base font-semibold text-[#555] flex-1 py-1 -mt-1"
+                  placeholder="Password"
+                  secureTextEntry={!isPasswordShowing}
+                  onChangeText={setPassword}
+                  value={password}
+                  placeholderTextColor={"#1f293396"}
+                />
+                <TouchableOpacity
+                  onPress={() => setIsPasswordShowing(!isPasswordShowing)}
+                >
+                  {isPasswordShowing ? (
+                    <Ionicons
+                      name="eye-off-outline"
+                      size={24}
+                      color="#7f7f7f"
+                    />
+                  ) : (
+                    <Ionicons name="eye-outline" size={24} color="#7f7f7f" />
+                  )}
+                </TouchableOpacity>
+              </View>
+              <View className="w-full my-5">
+                <TouchableOpacity className="w-full p-2 py-3 rounded-xl bg-black flex items-center justify-center">
+                  <Text className="text-lg text-white font-semibold">
+                    Proceed To Cheackout
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View className="flex flex-row items-center justify-center">
+                <Text className="text-lg font-semibold text-gray-700 ml-3">
+                  Create a new account?
+                </Text>
+                <TouchableOpacity onPress={() => handleSignUpScreen()}>
+                  <Text className="text-lg font-bold text-blue-600 mr-1">
+                    {" "}
+                    Sing Up
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
