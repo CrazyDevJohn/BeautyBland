@@ -56,11 +56,12 @@ export const signInUser = async (email, password) => {
 };
 
 export const checkIsAuthoriezed = (setUser) => {
-  onAuthStateChanged(auth, (user) => {
+  return onAuthStateChanged(auth, (user) => {
     if (user) {
-      setUser(user);
+      setUser(auth.currentUser);
+      return user;
     } else {
-      return "Not Athoriezed";
+      console.log("niot");
     }
   });
 };

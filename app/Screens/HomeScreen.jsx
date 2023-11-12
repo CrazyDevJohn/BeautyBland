@@ -21,6 +21,7 @@ import { signOut } from "firebase/auth";
 import { auth, checkIsAuthoriezed, signInUser } from "../utils/firebase";
 import { REMOVE_USER, SET_USER } from "../context/actions/UserActions";
 import Loading from "../Components/Loading";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const HomeScreen = () => {
   const [isPasswordShowing, setIsPasswordShowing] = React.useState(false);
@@ -50,18 +51,38 @@ const HomeScreen = () => {
     setIsLoading(true);
     try {
       fetchFeeds().then((res) => {
+        getFromLocalStorage();
         dispatch(SET_FEEDS(res));
         setTimeout(() => {
-          // setIsLoading(false);
+          setIsLoading(false);
         }, 2000);
       });
-      checkIsAuthoriezed(setUser);
       dispatch(SET_USER(user));
     } catch (er) {
       console.log(er);
       setIsLoading(false);
     }
   }, []);
+
+  const getFromLocalStorage = async () => {
+    try {
+      const isUser = JSON.parse(await AsyncStorage.getItem("@BEAUTYBLANDUSER"));
+      setUser(isUser);
+    } catch (err) {
+      console.log("getFromLocalStorage: ", err);
+    }
+  };
+
+  const setInLocalStorage = async () => {
+    try {
+      await AsyncStorage.setItem(
+        "@BEAUTYBLANDUSER",
+        JSON.stringify(auth.currentUser)
+      );
+    } catch (err) {
+      console.log("setInLocalStorage : ", err);
+    }
+  };
 
   const handleSignUpScreen = () => {
     setEmail("");
@@ -70,11 +91,12 @@ const HomeScreen = () => {
     navigation.navigate("SignUpScreen");
   };
 
-  const handleLogOutUser = () => {
+  const handleLogOutUser = async () => {
     signOut(auth)
-      .then(() => {
+      .then(async () => {
         dispatch(REMOVE_USER());
         setUser(null);
+        await AsyncStorage.removeItem("@BEAUTYBLANDUSER");
       })
       .catch((error) => {
         console.log("error  ; ", error);
@@ -85,6 +107,7 @@ const HomeScreen = () => {
     if ((email, password)) {
       setIsLoading(true);
       signInUser(email, password);
+      setInLocalStorage();
       checkIsAuthoriezed(setUser);
       dispatch(SET_USER(user));
       setTimeout(() => {
@@ -105,6 +128,7 @@ const HomeScreen = () => {
       <View className="w-full flex-row items-center justify-between px-4 py-2 ">
         {user && user !== null ? (
           <>
+            {console.log(user)}
             <Image
               source={{ uri: user.photoURL }}
               className="w-12 h-12 rounded-xl"
