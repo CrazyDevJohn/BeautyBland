@@ -61,7 +61,7 @@ export const checkIsAuthoriezed = (setUser) => {
       setUser(auth.currentUser);
       return user;
     } else {
-      console.log("niot");
+      console.log("errr");
     }
   });
 };
