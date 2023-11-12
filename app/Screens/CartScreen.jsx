@@ -57,6 +57,9 @@ const CartScreen = () => {
             className="w-64 h-64"
             resizeMode="contain"
           />
+          <Text className="text-xl font-semibold text=[#555]">
+            No items in cart
+          </Text>
         </View>
       ) : (
         <ScrollView className="w-full h-full">

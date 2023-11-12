@@ -22,21 +22,21 @@ const changProfile = async (userName, profileImage) => {
       return "Done";
     })
     .catch((error) => {
-      console.log("Error In Profile Updating", error);
+      alert("Error In Profile Updating" + error);
     });
 };
 
-export const createUser = async (email, password) => {
+export const createUser = async (email, password, name, profileImage) => {
   const data = await createUserWithEmailAndPassword(auth, email, password)
     .then(async (userCredential) => {
       const user = userCredential.user;
-      await changProfile();
+      await changProfile(name, profileImage);
       return user;
     })
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log("Error Is : ", errorMessage, " Error Code : ", errorCode);
+      alert("Error Is : " + errorMessage + " Error Code : " + errorCode);
     });
   return data;
 };
@@ -50,18 +50,17 @@ export const signInUser = async (email, password) => {
     .catch((error) => {
       const errorCode = error.code;
       const errorMessage = error.message;
-      console.log("Error Is : ", errorMessage, " Error Code : ", errorCode);
+      alert("Error Is : " + errorMessage + " Error Code : " + errorCode);
     });
   return data;
 };
 
-export const checkIsAuthoriezed = () => {
-  const user = onAuthStateChanged(auth, (user) => {
+export const checkIsAuthoriezed = (setUser) => {
+  onAuthStateChanged(auth, (user) => {
     if (user) {
-      return user;
+      setUser(user);
     } else {
       return "Not Athoriezed";
     }
   });
-  return user;
 };

@@ -9,22 +9,18 @@ import {
   StatusBar,
   Platform,
   TouchableOpacity,
-  TouchableWithoutFeedback,
 } from "react-native";
 import React from "react";
-import {
-  Entypo,
-  EvilIcons,
-  Feather,
-  FontAwesome,
-  Ionicons,
-} from "@expo/vector-icons";
-import { Screen3 } from "../assets";
+import { Entypo, Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import { fetchFeeds } from "../sanity";
 import { useDispatch, useSelector } from "react-redux";
 import { SET_FEEDS } from "../context/actions/feedsActions";
 import Feeds from "../Components/Feeds";
 import { useNavigation } from "@react-navigation/native";
+import { signOut } from "firebase/auth";
+import { auth, checkIsAuthoriezed, signInUser } from "../utils/firebase";
+import { REMOVE_USER, SET_USER } from "../context/actions/UserActions";
+import Loading from "../Components/Loading";
 
 const HomeScreen = () => {
   const [isPasswordShowing, setIsPasswordShowing] = React.useState(false);
@@ -34,7 +30,9 @@ const HomeScreen = () => {
   const [filtered, setFiltered] = React.useState(null);
   const [password, setPassword] = React.useState(null);
   const [email, setEmail] = React.useState(null);
-  const [user, setUser] = React.useState(null);
+  const [user, setUser] = React.useState(
+    useSelector((state) => state.userData.user)
+  );
   const feeds = useSelector((state) => state.feeds);
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -54,9 +52,11 @@ const HomeScreen = () => {
       fetchFeeds().then((res) => {
         dispatch(SET_FEEDS(res));
         setTimeout(() => {
-          setIsLoading(false);
+          // setIsLoading(false);
         }, 2000);
       });
+      checkIsAuthoriezed(setUser);
+      dispatch(SET_USER(user));
     } catch (er) {
       console.log(er);
       setIsLoading(false);
@@ -70,7 +70,31 @@ const HomeScreen = () => {
     navigation.navigate("SignUpScreen");
   };
 
-  const handleLogOutUser = () => {};
+  const handleLogOutUser = () => {
+    signOut(auth)
+      .then(() => {
+        dispatch(REMOVE_USER());
+        setUser(null);
+      })
+      .catch((error) => {
+        console.log("error  ; ", error);
+      });
+  };
+
+  const handleLogIn = () => {
+    if ((email, password)) {
+      setIsLoading(true);
+      signInUser(email, password);
+      checkIsAuthoriezed(setUser);
+      dispatch(SET_USER(user));
+      setTimeout(() => {
+        setIsLogInFormOpen(false);
+        setIsLoading(false);
+      }, 3000);
+    } else {
+      alert("Fill all of the feilds!");
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 items-center justify-start bg-[#ebeaef]">
@@ -82,7 +106,7 @@ const HomeScreen = () => {
         {user && user !== null ? (
           <>
             <Image
-              source={Screen3}
+              source={{ uri: user.photoURL }}
               className="w-12 h-12 rounded-xl"
               resizeMode="cover"
             />
@@ -186,9 +210,12 @@ const HomeScreen = () => {
                 </TouchableOpacity>
               </View>
               <View className="w-full my-5">
-                <TouchableOpacity className="w-full p-2 py-3 rounded-xl bg-black flex items-center justify-center">
+                <TouchableOpacity
+                  onPress={handleLogIn}
+                  className="w-full p-2 py-3 rounded-xl bg-black flex items-center justify-center"
+                >
                   <Text className="text-lg text-white font-semibold">
-                    Proceed To Cheackout
+                    Log In
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -207,6 +234,7 @@ const HomeScreen = () => {
           </View>
         </View>
       )}
+      {isLoading && <Loading isLoading={isLoading} />}
     </SafeAreaView>
   );
 };

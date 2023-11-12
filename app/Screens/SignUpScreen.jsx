@@ -12,15 +12,23 @@ import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { createUser, storage } from "../utils/firebase";
+import {
+  auth,
+  checkIsAuthoriezed,
+  createUser,
+  storage,
+} from "../utils/firebase";
+import { useDispatch, useSelector } from "react-redux";
+import { SET_USER } from "../context/actions/UserActions";
 
 const SignUpScreen = () => {
   const [image, setImage] = React.useState(null);
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [profileImage, setProfileImage] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -29,7 +37,6 @@ const SignUpScreen = () => {
       aspect: [4, 4],
       quality: 1,
     });
-
     if (!result.canceled) {
       try {
         setImage(result.assets[0].uri);
@@ -40,16 +47,32 @@ const SignUpScreen = () => {
   };
 
   const createAccount = () => {
-    createUser(email, password);
-    navigation.navigate("HomeScreen");
+    createUser(email, password, name, image);
+  };
+
+  const setUserInStore = () => {
+    const user = auth.currentUser;
+    dispatch(SET_USER(user));
+    if (!isLoading) {
+      navigation.replace("HomeScreen");
+    }
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
   };
 
   const handleLogIn = async () => {
-    const isUploaded = await uploadImage(image);
-    if (isUploaded) {
-      createAccount();
+    if ((email, password, name, image)) {
+      setIsLoading(true);
+      const isUploaded = await uploadImage(image);
+      if (isUploaded) {
+        createAccount();
+        setUserInStore();
+      } else {
+        handleLogIn();
+      }
     } else {
-      handleLogIn();
+      alert("Fill the all of feilds!");
     }
   };
   const handleLogInScreen = async () => {
@@ -77,7 +100,7 @@ const SignUpScreen = () => {
       const result = await uploadBytes(storageRef, blob);
       blob.close();
       await getDownloadURL(storageRef).then((url) => {
-        setProfileImage(url);
+        setImage(url);
         isDone = true;
       });
     } catch (error) {
