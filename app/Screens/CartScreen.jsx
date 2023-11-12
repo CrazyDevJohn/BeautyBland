@@ -11,15 +11,13 @@ import {
 import React from "react";
 import { Entypo, FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import {
-  Swipeable,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
+import { Swipeable } from "react-native-gesture-handler";
 import { useDispatch, useSelector } from "react-redux";
 import { EmptyCart } from "../assets";
 import { removeFromCart } from "../context/actions/cartAction";
 
 const CartScreen = () => {
+  const user = useSelector((state) => state.userData.user);
   const navigation = useNavigation();
   const cartItems = useSelector((state) => state.cartItems.cart);
   const [total, setTotal] = React.useState(0);
@@ -28,11 +26,19 @@ const CartScreen = () => {
     let mainTotal = 0;
     if (cartItems?.length > 0) {
       cartItems?.map((item) => {
-        mainTotal += item.data.price * item.qty;
+        mainTotal += item?.data?.price * item.qty;
         setTotal(mainTotal);
       });
     }
   }, [cartItems]);
+
+  const handleCheckOut = () => {
+    if (user !== null && user) {
+      console.log("checkout");
+    } else {
+      alert("Sorry! first you have login with us!");
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 w-full items-start justify-start bg-[#ebeaef] space-y-4">
@@ -133,7 +139,10 @@ const CartScreen = () => {
           </View>
 
           <View className="w-full px-8 my-4">
-            <TouchableOpacity className="w-full p-2 py-3 rounded-xl bg-black flex items-center justify-center">
+            <TouchableOpacity
+              onPress={handleCheckOut}
+              className="w-full p-2 py-3 rounded-xl bg-black flex items-center justify-center"
+            >
               <Text className="text-lg text-white font-semibold">
                 Proceed To Cheackout
               </Text>

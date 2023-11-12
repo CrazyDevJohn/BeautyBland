@@ -2,15 +2,20 @@ import { initializeApp, getApp, getApps } from "firebase/app";
 import {
   createUserWithEmailAndPassword,
   getAuth,
+  initializeAuth,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   updateProfile,
+  getReactNativePersistence,
 } from "firebase/auth";
 import { getStorage } from "firebase/storage";
 import { config } from "./firebase.config";
+import ReactNativeAsyncStorage from "@react-native-async-storage/async-storage";
 
 export const app = getApps.length > 0 ? getApp() : initializeApp(config);
-export const auth = getAuth(app);
+export const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(ReactNativeAsyncStorage),
+});
 export const storage = getStorage(app);
 
 const changProfile = async (userName, profileImage) => {

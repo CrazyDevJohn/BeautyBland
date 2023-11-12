@@ -15,7 +15,6 @@ import { addToCart } from "../context/actions/cartAction";
 
 const Products = (props) => {
   const { _id } = props.route.params;
-
   const feeds = useSelector((state) => state.feeds);
   const cartItems = useSelector((state) => state.cartItems);
   const [data, setData] = React.useState(null);

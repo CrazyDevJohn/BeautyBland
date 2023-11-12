@@ -48,10 +48,10 @@ const HomeScreen = () => {
   };
 
   React.useEffect(() => {
+    getFromLocalStorage();
     setIsLoading(true);
     try {
       fetchFeeds().then((res) => {
-        getFromLocalStorage();
         dispatch(SET_FEEDS(res));
         setTimeout(() => {
           setIsLoading(false);
@@ -107,10 +107,10 @@ const HomeScreen = () => {
     if ((email, password)) {
       setIsLoading(true);
       signInUser(email, password);
-      setInLocalStorage();
       checkIsAuthoriezed(setUser);
-      dispatch(SET_USER(user));
       setTimeout(() => {
+        setInLocalStorage();
+        dispatch(SET_USER(user));
         setIsLogInFormOpen(false);
         setIsLoading(false);
       }, 3000);
@@ -128,7 +128,6 @@ const HomeScreen = () => {
       <View className="w-full flex-row items-center justify-between px-4 py-2 ">
         {user && user !== null ? (
           <>
-            {console.log(user)}
             <Image
               source={{ uri: user.photoURL }}
               className="w-12 h-12 rounded-xl"
