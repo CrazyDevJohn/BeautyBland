@@ -200,7 +200,7 @@ export const CartItemCard = ({ item, qty }) => {
               {item?.shortDescription}
             </Text>
             <Text className="text-lg font-semibold text-black">
-              ${item?.price * qty}
+              ${parseFloat(item?.price * qty).toFixed(2)}
             </Text>
           </View>
         </View>
