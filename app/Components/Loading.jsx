@@ -1,6 +1,5 @@
-import { View, Text, StatusBar, Animated } from "react-native";
+import { View } from "react-native";
 import React from "react";
-import { Preloader } from "../assets";
 import LottieView from "lottie-react-native";
 
 const Loading = ({ isLoading }) => {
@@ -12,7 +11,6 @@ const Loading = ({ isLoading }) => {
         opacity: isLoading ? 1 : 0,
       }}
     >
-      <StatusBar backgroundColor={!isLoading ? "#e8eaef" : "#0d192e6f"} />
       <View className=" bg-[#0d192e] w-full h-full absolute opacity-40" />
       <View
         className="w-[90%] h-[400px] bg-[#e8eaef] rounded-2xl px-8"

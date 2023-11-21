@@ -1,4 +1,4 @@
-import { StatusBar, LogBox } from "react-native";
+import { LogBox } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -41,7 +41,6 @@ initializeAuth:`,
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
-        <StatusBar backgroundColor={"#e8eaef"} barStyle={"dark-content"} />
         <MyComponent setActiveScreen={setActiveScreen} />
         <Provider store={store}>
           <Stack.Navigator

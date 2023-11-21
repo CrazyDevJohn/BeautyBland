@@ -38,6 +38,11 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  React.useEffect(() => {
+    StatusBar.setBackgroundColor("#ffffff00");
+    StatusBar.setTranslucent(true);
+  }, []);
+
   const handleSearchTerm = (text) => {
     setSearchTerm(text);
     setFiltered(
@@ -120,11 +125,10 @@ const HomeScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 items-center justify-start bg-[#ebeaef]">
-      <StatusBar
-        backgroundColor={!isLogInFormOpen ? "#e8eaef" : "#0d192e6f"}
-        barStyle={"dark-content"}
-      />
+    <SafeAreaView
+      className="flex-1 items-center justify-start bg-[#ebeaef] "
+      style={{ paddingTop: StatusBar.currentHeight + 3 }}
+    >
       <View className="w-full flex-row items-center justify-between px-4 py-2 ">
         {user && user !== null ? (
           <>

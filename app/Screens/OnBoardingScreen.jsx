@@ -11,6 +11,11 @@ const OnBoardingScreen = () => {
   const navigation = useNavigation();
   const [screenState, setScreenState] = React.useState("true");
 
+  React.useEffect(() => {
+    StatusBar.setBackgroundColor("#ffffff00");
+    StatusBar.setTranslucent(true);
+  }, []);
+
   React.useLayoutEffect(() => {
     const checkOnBoardingStatus = async () => {
       const value = await AsyncStorage.getItem("@onboarding_complete");
@@ -37,7 +42,6 @@ const OnBoardingScreen = () => {
 
   return (
     <View className="flex-1  bg-white">
-      <StatusBar backgroundColor={"transparent"} barStyle={"light-content"} />
       {screenState === "true" ? (
         <ScreenOne />
       ) : (

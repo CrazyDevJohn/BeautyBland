@@ -6,7 +6,9 @@
     "orientation": "portrait",
     "icon": "./assets/Images/beautybland.png",
     "userInterfaceStyle": "light",
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -14,10 +16,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/Images/beautybland.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.friday.beautyBland"
     },
     "web": {
       "favicon": "./assets/Images/beautybland.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "13c2958c-8dc9-48fd-bc0f-89becaff8daa"
+      }
     }
   }
 }

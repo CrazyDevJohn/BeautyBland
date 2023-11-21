@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
+  StatusBar,
 } from "react-native";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +24,11 @@ const Products = (props) => {
   const screenHeight = Dimensions.get("window").height;
   const navigation = useNavigation();
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    StatusBar.setBackgroundColor("#ffffff00");
+    StatusBar.setTranslucent(true);
+  }, []);
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -51,7 +57,10 @@ const Products = (props) => {
         </View>
       ) : (
         <>
-          <SafeAreaView className="w-full ">
+          <SafeAreaView
+            className="w-full "
+            style={{ paddingTop: StatusBar.currentHeight + 3 }}
+          >
             {/* top section */}
             <View className="flex-row justify-between px-4 py-2 w-full">
               <TouchableOpacity onPress={() => navigation.goBack()}>

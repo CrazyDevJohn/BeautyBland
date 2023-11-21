@@ -7,7 +7,7 @@ import {
   TextInput,
 } from "react-native";
 import React from "react";
-import { Logo, SupGirl } from "../assets";
+import { BGImage, Logo, SupGirl } from "../assets";
 import * as ImagePicker from "expo-image-picker";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
@@ -29,6 +29,11 @@ const SignUpScreen = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    StatusBar.setBackgroundColor("#ffffff00");
+    StatusBar.setTranslucent(true);
+  }, []);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -112,8 +117,12 @@ const SignUpScreen = () => {
 
   return (
     <View className="flex-1 bg-[#2f60dd] relative items-center justify-end">
-      <StatusBar backgroundColor={"#2f60dd"} barStyle={"dark-content"} />
-      <View className="w-full h-[80%] bg-[#e8eaef] items-center justify-start rounded-tl-[50px] rounded-tr-[50px]">
+      <Image
+        source={BGImage}
+        className="w-full h-[30%] absolute -top-[1px] left-0 right-0"
+        resizeMode="cover"
+      />
+      <View className="w-full h-[80%] bg-[#e8eaef] items-center justify-start rounded-tl-[64px] ">
         <Image
           source={Logo}
           className="w-12 h-12 rounded-md mt-5"
