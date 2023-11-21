@@ -23,6 +23,11 @@ const CartScreen = () => {
   const [total, setTotal] = React.useState(0);
 
   React.useEffect(() => {
+    StatusBar.setBackgroundColor("#ffffff00");
+    StatusBar.setTranslucent(true);
+  }, []);
+
+  React.useEffect(() => {
     let mainTotal = 0;
     if (cartItems?.length > 0) {
       cartItems?.map((item) => {
@@ -41,7 +46,10 @@ const CartScreen = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1 w-full items-start justify-start bg-[#ebeaef] space-y-4">
+    <SafeAreaView
+      className="flex-1 w-full items-start justify-start bg-[#ebeaef] space-y-4"
+      style={{ paddingTop: StatusBar.currentHeight + 3 }}
+    >
       {/* carts */}
       <View className="flex-row items-center justify-between w-full px-4 py-2">
         <TouchableOpacity onPress={() => navigation.goBack()}>
